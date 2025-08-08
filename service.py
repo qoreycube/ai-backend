@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 # Load the trained model
-model_path = Path(__file__).parent / 'bird_classifier_3_species.pkl'
+model_path = Path(__file__).parent / 'bird_classifier_50_species.pkl'
 learn = load_learner(model_path)
 
 # Helper to load species from bird_species.txt
@@ -49,5 +49,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 9000))
     app.run(debug=True, host='0.0.0.0', port=port)
