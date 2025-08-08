@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 # Load the trained model
-model_path = Path(__file__).parent / 'bird_classifier_50_species.pkl'
+model_path = Path(__file__).parent / 'bird_classifier_52_species.pkl'
 learn = load_learner(model_path)
 
 # Helper to load species from bird_species.txt
