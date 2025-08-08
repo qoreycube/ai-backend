@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify
 from fastai.vision.all import *
 from pathlib import Path
 import tempfile
+import os
 
 app = Flask(__name__)
 
 # Load the trained model
-model_path = Path(__file__).parent.parent.parent / 'assets' / 'birds' / 'bird_classifier.pkl'
+model_path = Path(__file__).parent / 'assets' / 'birds' / 'bird_classifier.pkl'
 learn = load_learner(model_path)
 
 @app.route('/predict', methods=['POST'])
@@ -34,4 +35,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, port=port)
