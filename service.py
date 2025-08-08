@@ -37,10 +37,20 @@ def predict():
             img_path = Path(tmp.name)
             img_file.save(img_path)
 
+
         # Make prediction
         pred_class, pred_idx, probs = learn.predict(img_path)
 
+        # Get top 3 predictions
+        top3_idx = probs.argsort(descending=True)[:3]
+        top3 = []
+        for idx in top3_idx:
+            species_name = learn.dls.vocab[idx]
+            confidence = float(probs[idx])
+            top3.append({'species': species_name, 'confidence': confidence})
+
         return jsonify({
+            'top3': top3,
             'predicted_species': str(pred_class),
             'confidence': float(probs[pred_idx])
         })
