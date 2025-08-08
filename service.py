@@ -6,9 +6,23 @@ import os
 
 app = Flask(__name__)
 
+
 # Load the trained model
-model_path = Path(__file__).parent / 'assets' / 'birds' / 'bird_classifier_3_species.pkl'
+model_path = Path(__file__).parent / 'bird_classifier_3_species.pkl'
 learn = load_learner(model_path)
+
+# Helper to load species from bird_species.txt
+def load_species():
+    species_path = Path(__file__).parent / 'bird_species.txt'
+    if not species_path.exists():
+        return []
+    with open(species_path, 'r') as f:
+        return [line.strip() for line in f if line.strip()]
+    
+@app.route('/species', methods=['GET'])
+def get_species():
+    species = load_species()
+    return jsonify({'species': species})
 
 @app.route('/predict', methods=['POST'])
 def predict():

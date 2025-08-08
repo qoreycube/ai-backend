@@ -19,7 +19,7 @@ def sanitize_folder_name(name):
     # Replace spaces with underscores and remove special characters
     return name.replace(" ", "_").replace("-", "_").lower()
 
-def download_images_bing(query, folder, limit=25):  # Increased from 50 to 100
+def download_images_bing(query, folder, limit=100):  # Increased from 50 to 100
     dest = base_dir/folder
     if dest.exists() and any(dest.glob('*.jpg')):
         print(f"✅ Skipping {folder}, already has images.")
@@ -83,8 +83,8 @@ dls = ImageDataLoaders.from_folder(
             p_lighting=0.8
         ),
         Normalize.from_stats(*imagenet_stats)
-    ],
-    bs=4
+    ]#,
+#    bs=2
 )
 
 # Optional: Show sample images
@@ -96,10 +96,12 @@ print("🏋️  Creating vision_learner")
 
 learn = vision_learner(
     dls, 
-    resnet18,  # More powerful than resnet34
+    resnet50,  # Reduced from resnet34 or resnet50
     metrics=[accuracy, partial(top_k_accuracy, k=min(5, dls.c))],  # Use partial to set k
     pretrained=True
 )
+
+learn.to_fp16()
 
 # Find optimal learning rate
 print("🏋️  Running lr_find()")
