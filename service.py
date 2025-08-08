@@ -8,7 +8,12 @@ app = Flask(__name__)
 
 
 # Load the trained model
-model_path = Path(__file__).parent / 'bird_classifier_52_species.pkl'
+model_dir = Path(__file__).parent
+model_files = list(model_dir.glob('*.pkl'))
+if not model_files:
+    raise FileNotFoundError("No .pkl model file found in the directory.")
+model_path = model_files[0]
+
 learn = load_learner(model_path)
 
 # Helper to load species from bird_species.txt
