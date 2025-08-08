@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Load the trained model
-model_path = Path(__file__).parent / 'assets' / 'birds' / 'bird_classifier.pkl'
+model_path = Path(__file__).parent / 'assets' / 'birds' / 'bird_classifier_3_species.pkl'
 learn = load_learner(model_path)
 
 @app.route('/predict', methods=['POST'])
