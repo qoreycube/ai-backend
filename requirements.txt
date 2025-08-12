@@ -1,3 +1,6 @@
 flask
 fastai<2.8.0
-bing_image_downloader
+transformers
+huggingface_hub
+toml
+timm==0.4.12

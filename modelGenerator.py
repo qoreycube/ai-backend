@@ -1,6 +1,7 @@
 from bing_image_downloader import downloader
 from fastai.vision.all import *
 import os
+import sys
 from pathlib import Path
 
 # Read bird species from file
@@ -45,14 +46,15 @@ def download_images_bing(query, folder, limit=100):  # Increased from 50 to 100
     except Exception as e:
         print(f"❌ Error downloading {query}: {str(e)}")
 
-# Step 1: Download images
-print(f"📥 Starting download for {len(bird_species)} bird species...")
-for i, bird in enumerate(bird_species, 1):
-    folder_name = sanitize_folder_name(bird)
-    print(f"[{i}/{len(bird_species)}] Processing: {bird}")
-    download_images_bing(f"{bird} bird", folder_name)
 
-print("✅ Download phase completed!")
+# Step 1: Download images (only if 'download' argument is passed)
+if 'download' in sys.argv:
+    print(f"📥 Starting download for {len(bird_species)} bird species...")
+    for i, bird in enumerate(bird_species, 1):
+        folder_name = sanitize_folder_name(bird)
+        print(f"[{i}/{len(bird_species)}] Processing: {bird}")
+        download_images_bing(f"{bird} bird", folder_name)
+    print("✅ Download phase completed!")
 
 # Step 1.5: Clean up downloaded images (remove corrupted/invalid files)
 print("🧹 Cleaning up downloaded images...")

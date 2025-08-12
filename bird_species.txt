@@ -6,6 +6,14 @@ American Goldfinch
 European Starling
 House Finch
 Red-winged Blackbird
+Bald Eagle
+Golden Eagle
+Harpy Eagle
+Black Eagle
+White-tailed Eagle
+Greater Flamingo
+American Flamingo
+Chilean Flamingo
 American Crow
 Song Sparrow
 Mourning Dove
@@ -50,3 +58,65 @@ Chimney Swift
 Purple Martin
 Pyrrhuloxia Cardinal
 Vermillion Cardinal
+Scarlet Tanager
+Indigo Bunting
+Eastern Towhee
+Painted Bunting
+Rose-breasted Grosbeak
+Northern Flicker
+Eastern Meadowlark
+Bobolink
+Swainson's Thrush
+Wood Thrush
+Hermit Thrush
+Ovenbird
+Prothonotary Warbler
+Louisiana Waterthrush
+Northern Parula
+Magnolia Warbler
+Black-throated Blue Warbler
+Black-throated Green Warbler
+Wilson's Warbler
+American Redstart
+Yellow-billed Cuckoo
+Eastern Kingbird
+Acadian Flycatcher
+Least Flycatcher
+Eastern Phoebe
+Great Crested Flycatcher
+Red-eyed Vireo
+Warbling Vireo
+Blue-gray Gnatcatcher
+Summer Tanager
+Western Tanager
+Mountain Bluebird
+Western Meadowlark
+Spotted Towhee
+Cassin's Finch
+Lazuli Bunting
+Steller's Jay
+California Scrub-Jay
+Clark's Nutcracker
+Black-billed Magpie
+Western Wood-Pewee
+Say's Phoebe
+Violet-green Swallow
+Tree Swallow
+Bank Swallow
+Northern Rough-winged Swallow
+Barn Owl
+Burrowing Owl
+Snowy Egret
+Green Heron
+American Bittern
+Virginia Rail
+Sora
+Sandhill Crane
+American Avocet
+Black-necked Stilt
+Willet
+Long-billed Curlew
+Marbled Godwit
+American Oystercatcher
+Raven
+Yellow-headed Blackbird
