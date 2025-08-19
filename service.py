@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response, stream_with_context
 from fastai.vision.all import *
 from pathlib import Path
 import tempfile
 from huggingface_hub import from_pretrained_fastai
+import requests
+import json
 
 
 import os
@@ -72,6 +74,90 @@ def get_species():
     return jsonify({'species': species})
 
 
+
+@app.route('/ollama', methods=['GET'])
+def ollama_generate():
+    """Proxy a prompt to local Ollama and return the response.
+
+    Query params:
+      - prompt (required): The text prompt to send to the model
+      - model (optional): Ollama model name; defaults to env OLLAMA_MODEL or 'llama3.1'
+    """
+    prompt = request.args.get('prompt', type=str)
+    if not prompt:
+        return jsonify({'error': "Missing required query parameter 'prompt'"}), 400
+
+    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.1')
+    ollama_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
+
+    try:
+        resp = requests.post(
+            f"{ollama_url.rstrip('/')}/api/generate",
+            json={
+                'model': model,
+                'prompt': prompt,
+                'stream': False
+            },
+            timeout=60
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return jsonify({
+            'model': model,
+            'response': data.get('response'),
+            'info': {k: data.get(k) for k in ('created_at','total_duration','load_duration','eval_count','eval_duration') if k in data}
+        })
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 502
+
+
+@app.route('/ollama/stream', methods=['GET'])
+def ollama_stream():
+    """Stream tokens from local Ollama via Server-Sent Events (SSE).
+
+    Query params:
+      - prompt (required): The text prompt to send to the model
+      - model (optional): Ollama model name; defaults to env OLLAMA_MODEL or 'llama3.1'
+    """
+    prompt = request.args.get('prompt', type=str)
+    if not prompt:
+        return jsonify({'error': "Missing required query parameter 'prompt'"}), 400
+
+    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.1')
+    ollama_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
+
+    def event_stream():
+        try:
+            with requests.post(
+                f"{ollama_url.rstrip('/')}/api/generate",
+                json={'model': model, 'prompt': prompt, 'stream': True},
+                stream=True,
+                timeout=300,
+            ) as r:
+                r.raise_for_status()
+                for line in r.iter_lines(decode_unicode=True):
+                    if not line:
+                        continue
+                    try:
+                        data = json.loads(line)
+                    except Exception:
+                        continue
+                    # Stream token chunks as JSON object, with encoded newlines and explicit event name
+                    if 'response' in data and data['response']:
+                        chunk = str(data['response'])
+                        yield f"event: update\ndata: {json.dumps({'content': chunk})}\n\n"
+                    # When done, send a final event with basic stats
+                    if data.get('done'):
+                        info = {k: data.get(k) for k in (
+                            'created_at','total_duration','load_duration','eval_count','eval_duration'
+                        ) if k in data}
+                        yield f"event: done\ndata: {json.dumps(info)}\n\n"
+                        break
+        except requests.exceptions.RequestException as e:
+            yield f"event: error\ndata: {str(e)}\n\n"
+
+    headers = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
+    return Response(stream_with_context(event_stream()), mimetype='text/event-stream', headers=headers)
 
 
 @app.route('/predict', methods=['POST'])
