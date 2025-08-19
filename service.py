@@ -87,7 +87,7 @@ def ollama_generate():
     if not prompt:
         return jsonify({'error': "Missing required query parameter 'prompt'"}), 400
 
-    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.1')
+    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.2')
     ollama_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
 
     try:
@@ -123,7 +123,7 @@ def ollama_stream():
     if not prompt:
         return jsonify({'error': "Missing required query parameter 'prompt'"}), 400
 
-    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.1')
+    model = request.args.get('model') or os.environ.get('OLLAMA_MODEL', 'llama3.2')
     ollama_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
 
     def event_stream():
