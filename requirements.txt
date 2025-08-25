@@ -4,3 +4,5 @@ transformers
 huggingface_hub
 toml
 timm==0.4.12
+opencv-python
+pillow
